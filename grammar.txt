@@ -1,0 +1,183 @@
+S: compilation_unit    
+  ;
+  
+compilation_unit: package_statement import_statement class_stmt
+             	;
+             	
+package_statement: T_PACKAGE package T_SEMC package_statement
+				|	
+             	;
+
+package: T_IDENTIFIER 
+		| package T_DOT T_IDENTIFIER
+		| package T_MUL
+		;
+
+import_statement: T_IMPORT class_name  T_DOT T_MUL T_SEMC
+		   		  | T_IMPORT class_name T_SEMC
+				  | T_IMPORT T_MUL T_SEMC
+				  |
+		   		  ;
+		   		  
+modifier: T_PUBLIC
+		| T_PRIVATE
+		| T_PROTECTED
+		;
+
+class_stmt: modifier T_CLASS class_name stmnt T_OF methods T_CF
+      	;
+      	
+class_name: T_IDENTIFIER
+    	;
+
+methods: other_method main_method
+		;
+
+other_method: other_method T_STATIC T_VOID T_IDENTIFIER T_OC T_CC T_OF stmnt T_CF
+			| other_method modifier T_VOID T_IDENTIFIER T_OC T_CC T_OF stmnt T_CF
+			|
+        	;
+
+main_method: T_PUBLIC T_STATIC T_VOID T_MAIN T_OC T_STRING T_OS T_CS T_ARGS T_CC T_OF stmnt T_CF
+        	;
+
+stmnt: stmnt s1
+  |
+  ;
+
+s1: variable_declaration T_SEMC   
+	| array
+	| expression T_SEMC   	 
+	| if_construct
+	| for_construct
+	| T_SOP T_OC T_STRING_LITERAL T_CC T_SEMC	
+	| T_SEMC
+	;
+
+variable_declaration: dtypes
+                	;
+                	
+array: array_declaration
+		| array_memalloc
+		;
+		
+array_declaration: T_INT T_IDENTIFIER T_OS T_CS T_SEMC	
+						
+		| T_INT T_OS T_CS T_IDENTIFIER T_EQ T_NEW T_INT T_OS T_NUM T_CS T_SEMC 
+		;
+
+array_memalloc : T_IDENTIFIER T_EQ T_NEW T_INT T_OS T_NUM T_CS T_SEMC 
+				;
+
+dtypes: T_INT dec_int
+    	| T_FLOAT dec_float
+    	| T_CHAR dec_char
+    	| T_STRING  dec_string
+    	;
+
+//int
+dec_int: T_IDENTIFIER T_EQ int_e    	
+
+   		| dec_int T_COMMA T_IDENTIFIER    	
+   					
+   		| T_IDENTIFIER    	 		
+   		;
+
+//float
+dec_float: 	T_IDENTIFIER T_EQ float_e		
+   		
+   		| dec_float T_COMMA T_IDENTIFIER    	
+   		
+   		| T_IDENTIFIER   		 		
+   		;
+
+//char 					
+dec_char: T_IDENTIFIER T_EQ char_e   					
+   		| dec_char T_COMMA T_IDENTIFIER    	   		
+   		| T_IDENTIFIER   		 		
+   		;
+   
+//String  					
+dec_string: T_IDENTIFIER T_EQ str_e			
+   					
+   		| dec_string T_COMMA T_IDENTIFIER    	
+   					
+   		| T_IDENTIFIER   		 		
+   		;
+
+expression: int_e
+         | rel_e
+      	;
+
+rel_e: int_e T_LT int_e   	 
+      	| int_e T_GT int_e 	 
+      	| int_e T_LE int_e 	 
+      	| int_e T_GE int_e 	 
+      	| int_e T_DEQ int_e     
+      	| int_e T_NE_OP int_e     
+      	| T_TRUE
+      	| T_FALSE
+      	//| int_e				 {if($1==0){return 0;}	else{return 1;}}			
+      	;
+      	
+
+int_e: int_e T_MUL int_e   	 
+     | int_e T_DIV int_e    
+     | int_e T_ADD int_e    
+     | int_e T_SUB int_e    
+     | T_IDENTIFIER   		
+     | T_NUM   			 
+     | T_IDENTIFIER T_INC_OP   	 
+     | T_IDENTIFIER T_DEC_OP   	 
+     | T_INC_OP T_IDENTIFIER    	 
+     | T_DEC_OP T_IDENTIFIER		
+     | T_IDENTIFIER T_EQ int_e    
+     | T_OC int_e T_CC	
+	 ;
+
+
+float_e: T_IDENTIFIER   	
+	 | T_DECIMAL   				
+	 | T_IDENTIFIER T_EQ float_e   	
+	 ;
+
+char_e: T_IDENTIFIER   		
+	 | T_CHARACTER  				
+	 | T_IDENTIFIER T_EQ char_e  	
+	 ;
+					
+str_e: T_IDENTIFIER  		
+	 | T_STRING_LITERAL				
+	 | T_IDENTIFIER T_EQ str_e  	
+	 ;
+
+if_construct: T_IF T_OC expression T_CC T_OF stmnt T_CF   		 
+	   	| T_IF T_OC expression T_CC T_OF stmnt T_CF else
+		;
+		
+else: T_ELSE T_OF stmnt T_CF
+		| T_ELSE if_construct
+		;
+
+for_construct: T_FOR T_OC for_args T_CC T_OF stmnt T_CF
+    	;
+
+for_args: for_conds T_SEMC for_op
+   	;
+
+for_conds: for_init T_SEMC for_cond
+	;
+
+for_init: T_INT dec_int
+	| dec_int
+	|
+	;
+
+for_cond: rel_e
+	|
+	;
+	
+for_op: int_e
+	|
+	;
+	

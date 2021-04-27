@@ -1,0 +1,38 @@
+t0 = 12 / 3
+a = t0
+cr = 'a'
+fl = 6.7
+if not true goto L1
+ff = 555
+y = 99
+t1 = 5 + 10
+c = t1
+t2 = 5 + y
+ff = t2
+oo = 444
+t3 = a >= 2
+if not t3  goto L2
+a = 10
+goto L3
+L2: 
+a = 8
+L3: 
+goto L4
+L1: 
+ff = 10
+L4: 
+i = 5
+L5: 
+t4 = i < 10
+if t4 goto L6
+goto L8
+L7: 
+t5 = i + 1
+i = t5
+goto L5
+L6: 
+t6 = 8 + i
+ff = t6
+goto L7
+L8: 
+R = 10
